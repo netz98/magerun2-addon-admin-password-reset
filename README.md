@@ -14,7 +14,7 @@ The command replaces each selected user's password with a cryptographically rand
 Install the module with Composer:
 
 ```bash
-composer require n98/ext.magerun2.n98.admin-password-reset
+composer require n98/magerun2-addon-admin-password-reset
 ```
 
 n98-magerun2 loads modules from `lib/n98-magerun2/modules`. Add the following command to the root project's `post-install-cmd` scripts so the Composer package is linked automatically after installation:
@@ -23,7 +23,7 @@ n98-magerun2 loads modules from `lib/n98-magerun2/modules`. Add the following co
 {
   "scripts": {
     "post-install-cmd": [
-      "mkdir -p lib/n98-magerun2/modules && ln -rsfT vendor/n98/ext.magerun2.n98.admin-password-reset lib/n98-magerun2/modules/admin-password-reset"
+      "mkdir -p lib/n98-magerun2/modules && ln -rsfT vendor/n98/magerun2-addon-admin-password-reset lib/n98-magerun2/modules/admin-password-reset"
     ]
   }
 }
