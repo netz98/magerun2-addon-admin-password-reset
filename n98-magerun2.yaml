@@ -1,0 +1,6 @@
+autoloaders_psr4:
+  N98\AdminPasswordReset\: '%module%/src'
+
+commands:
+  customCommands:
+    - 'N98\AdminPasswordReset\Command\ForcePasswordResetCommand'

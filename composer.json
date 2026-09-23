@@ -1,0 +1,26 @@
+{
+  "name": "n98/magerun2-addon-admin-password-reset",
+  "description": "n98-magerun2 command to force selected Magento admin users through password reset",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "magento",
+    "n98-magerun2",
+    "password-reset",
+    "admin"
+  ],
+  "authors": [
+      {
+        "name": "valantic CEC Deutschland GmbH",
+        "email": "magento.cec@valantic.com"
+      }
+    ],
+  "require": {
+    "php": ">=8.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "N98\\AdminPasswordReset\\": "src/"
+    }
+  }
+}
