@@ -9,12 +9,13 @@ use Magento\Framework\App\Area;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\App\State;
 use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\Mail\Template\TransportBuilderFactory;
 use Magento\Security\Model\AdminSessionInfo;
 use Magento\Security\Model\ConfigInterface as SecurityConfig;
 use Magento\Security\Model\ResourceModel\AdminSessionInfo\CollectionFactory as SessionCollectionFactory;
 use Magento\User\Model\ResourceModel\User\CollectionFactory as UserCollectionFactory;
 use Magento\User\Model\ResourceModel\User as UserResource;
-use Magento\User\Model\Spi\NotificatorInterface;
+use Magento\User\Model\Spi\NotificatorInterfaceFactory;
 use Magento\User\Model\UserFactory;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,7 +29,8 @@ final class ForcePasswordResetCommand extends AbstractMagentoCommand
     private UserResource $userResource;
     private EncryptorInterface $encryptor;
     private BackendDataHelper $backendDataHelper;
-    private NotificatorInterface $notificator;
+    private NotificatorInterfaceFactory $notificatorFactory;
+    private TransportBuilderFactory $transportBuilderFactory;
     private SessionCollectionFactory $sessionCollectionFactory;
     private SecurityConfig $securityConfig;
     private ResourceConnection $resourceConnection;
@@ -57,7 +59,8 @@ final class ForcePasswordResetCommand extends AbstractMagentoCommand
         UserResource $userResource,
         EncryptorInterface $encryptor,
         BackendDataHelper $backendDataHelper,
-        NotificatorInterface $notificator,
+        NotificatorInterfaceFactory $notificatorFactory,
+        TransportBuilderFactory $transportBuilderFactory,
         SessionCollectionFactory $sessionCollectionFactory,
         SecurityConfig $securityConfig,
         ResourceConnection $resourceConnection,
@@ -68,7 +71,8 @@ final class ForcePasswordResetCommand extends AbstractMagentoCommand
         $this->userResource = $userResource;
         $this->encryptor = $encryptor;
         $this->backendDataHelper = $backendDataHelper;
-        $this->notificator = $notificator;
+        $this->notificatorFactory = $notificatorFactory;
+        $this->transportBuilderFactory = $transportBuilderFactory;
         $this->sessionCollectionFactory = $sessionCollectionFactory;
         $this->securityConfig = $securityConfig;
         $this->resourceConnection = $resourceConnection;
@@ -122,7 +126,11 @@ final class ForcePasswordResetCommand extends AbstractMagentoCommand
                 $this->userResource->trackPassword($user, $user->getPassword());
 
                 if ($input->getOption('send-email') && (bool)$user->getIsActive()) {
-                    $this->notificator->sendForgotPassword($user);
+                    // Isolate mutable mail state so recipients cannot accumulate between users.
+                    $notificator = $this->notificatorFactory->create([
+                        'transportBuilder' => $this->transportBuilderFactory->create(),
+                    ]);
+                    $notificator->sendForgotPassword($user);
                 }
 
                 if ($input->getOption('invalidate-sessions')) {

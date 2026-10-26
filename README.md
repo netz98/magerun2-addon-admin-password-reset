@@ -68,6 +68,8 @@ n98-magerun2 admin:user:force-password-reset --all --exclude-username admin --se
 
 Inactive users included with `--include-inactive` receive a new password but never receive a password-reset email, even when `--send-email` is specified.
 
+Each active user receives a separate password-reset email addressed only to that user.
+
 ## Safety
 
 - Run a dry run before every reset to verify the selected accounts.

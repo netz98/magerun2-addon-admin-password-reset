@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Isolated the mail notifier and transport builder for each admin user to prevent recipients from accumulating across password-reset emails.
+
 ## 1.0.0
 
 ### Added
